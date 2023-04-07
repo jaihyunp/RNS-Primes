@@ -1,6 +1,7 @@
 #include "typedefs.h"
 #include "arch32.h"
 #include <iostream>
+#include <cassert>
 
 uint32 mulmod(uint32 a, uint32 b, uint32 p)
 {

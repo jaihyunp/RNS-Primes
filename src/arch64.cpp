@@ -1,6 +1,7 @@
 #include "typedefs.h"
 #include "arch64.h"
 #include <iostream>
+#include <cassert>
 
 uint64 mulmod(uint64 a, uint64 b, uint64 p)
 {

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <bit>
+#include <vector>
 
 int main()
 {
@@ -38,8 +39,9 @@ int main()
 
 const int EXP_NUM_PRIMES = 1;
 const int EXP_LOW_HWT = 2;
+const int EXP_LOGN16 = 3;
 
-int EXP = EXP_LOW_HWT;
+int EXP = EXP_LOGN16;
     
     if (EXP == EXP_NUM_PRIMES) {
         for (int logN : {16, 17, 15, 14, 13}) {
@@ -94,6 +96,36 @@ int EXP = EXP_LOW_HWT;
 
         std::cout << (double) maxprime / minprime << std::endl;
         std::cout << num << std::endl;
+
+    } else if (EXP == EXP_LOGN16) {
+
+        int logN = 16;
+        int bitlen = 30;
+
+        std::cout << "logN: " << logN << std::endl;
+        std::cout << "bitlen: " << bitlen << std::endl;
+        
+        int num = 0;
+        //for (uint32 prime = ((uint32) 1 << bitlen) + 0x1 - ((uint32) 1 << (logN + 1)); prime >> (bitlen - 1); prime -= (uint32) 1 << (logN + 1)) {
+        std::vector<uint32> primes;
+
+        for (uint32 prime = ((uint32) 1 << (bitlen - 1)) + 0x1; !(prime >> bitlen); prime += (uint32) 1 << (logN + 1)) {
+            if (is_prime(prime)) {
+                if (std::__popcount(prime) > 7)
+                    continue;
+                num ++;
+                std::cout << std::hex << prime << " (" << std::dec << std::__popcount(prime) << ")" << std::endl;
+                primes.push_back(prime);
+            }
+        }
+
+        std::cout << num << std::endl;
+
+        for (int i = 0; i < 30; i ++) {
+            std::cout << primes[i] * primes[-i] << std::endl;
+        }
+
+
     }
 
 //    for (int logN = 15; logN <= 17; logN ++) {

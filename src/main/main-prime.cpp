@@ -10,37 +10,68 @@
 #include <vector>
 #include <cmath>
 #include <math.h>
-
+#include <climits>
+using namespace std;
 uint64 update_delta (uint64 delta, uint32 p1, uint32 p2) {
+//    cout << delta << endl;
+//    cout << (long double) delta / (long double) p1 / (long double) p2 << endl;
     return (uint64) ((long double) delta * ((long double) delta / (long double) p1 / (long double) p2));
 };
+
+uint64 next_primes(uint64 delta_init, uint64 delta, vector<bool> &prime_avail, vector<uint32> &primes)
+{
+    int num = primes.size();
+    long long int diff_min = LLONG_MAX;
+    int idx1 = 0, idx2 = 0;
+    for (int i = 0; i < num; i ++) {
+        if (!prime_avail[i])
+            continue;
+        for (int j = 0; j < i; j ++) {
+            if (!prime_avail[j])
+                continue;
+//            uint64 prod = (uint64) primes[i] * (uint64) primes[j];
+            long long int diff = (long long int) delta_init - (long long int) update_delta(delta, primes[i], primes[j]); // prod;
+            if (abs(diff) < abs(diff_min)) {
+                diff_min = diff;
+                idx1 = i;
+                idx2 = j;
+//                cout << "Update! " << diff_min << " ~ " << delta <<endl;
+            }
+        }
+    }
+    cout << "Next primes for " << delta << " is: ";
+    cout << primes[idx1] << "ULL, " << primes[idx2] << "ULL, ";
+    cout << " -> Next delta would be " << update_delta(delta, primes[idx1], primes[idx2]) <<endl;
+
+    prime_avail[idx1] = false;
+    prime_avail[idx2] = false;
+
+    return update_delta(delta, primes[idx1], primes[idx2]);
+}
+
+void find_all (uint64 delta_init, vector<uint32> &primes, vector<bool> &prime_avail) 
+{
+    int num = primes.size();
+    uint64 delta = delta_init;
+    uint64 delta_min = delta_init;
+    cout << "Initial delta: " << delta << endl;;
+    for (int i = 0; i < num; i += 2) {
+        delta = next_primes(delta_init, delta, prime_avail, primes);
+        if ((long long int) delta < (long long int) delta_min)
+            delta_min = delta;
+///        cout << i / 2 + 1 << ": " << (long double) delta_init / delta_min << endl;
+        cout << i / 2 + 1 << ": " << log2l((long double) delta / delta_init) << endl;
+//        if (abs((long double) delta / delta_init - 1) > 0.001)
+//            break;
+    }        
+    cout << delta_min;
+    cout << endl;
+}
+
+
+
 int main()
 {
-
-//    for (int logN = 15; logN <= 17; logN ++) {
-//        for (int bitlen = 20; bitlen <= 30; bitlen ++) {
-//            int num = 0; 
-//            for (uint32 prime = ((uint32) 1 << bitlen) + 1; !(prime >> (bitlen + 1)); prime += (uint32) 1 << (logN + 1)) {
-//                if (is_prime(prime) != _is_prime(prime))
-//                    std::cout << prime << " " << _is_prime(prime) <<  std::endl;
-//            }
-//        }
-//    }
-
-//    for (int logN = 17; logN <= 17; logN ++) {
-//        for (int bitlen = 60; bitlen <= 60; bitlen ++) {
-//            int num = 0; 
-//            for (uint64 prime = ((uint64) 1 << bitlen) + 1; num < 1000; prime += (uint32) 1 << (logN + 1)) {
-//                num ++;
-//                std::cout << "Great1 " << prime << _is_prime(prime) << std::endl;
-//                std::cout << "Great2 " << prime << is_prime(prime) << std::endl;
-//                if (is_prime(prime) != _is_prime(prime)) {
-//                    std::cout << "It sucks!!!!!!" << std::endl;
-//                    return 1;
-//                }
-//            }
-//        }
-//    }
 
 const int EXP_NUM_PRIMES = 1;
 const int EXP_LOW_HWT = 2;
@@ -58,7 +89,8 @@ int EXP = EXP_SF;
         std::vector<long double> log_primes;
         std::vector<bool> prime_avail;
         
-        for (int bitlen : {29, 30}) {
+//        for (int bitlen : {25, 26, 27, 28, 29, 30}) {
+        for (int bitlen = 1; bitlen <= 32; bitlen ++) {
             for (uint32 prime = ((uint32) 1 << (bitlen - 1)) + 0x1; !(prime >> bitlen); prime += (uint32) 1 << (logN + 1)) {
                 if (is_prime(prime)) {
                     primes.push_back(prime);
@@ -68,7 +100,11 @@ int EXP = EXP_SF;
                 }
             }
         }
+        
+        cout << num << endl;
 
+        uint64 delta_init = 1ULL << 42;
+        find_all (delta_init, primes, prime_avail);
 
 
     } else if (EXP == EXP_NUM_PRIMES) {

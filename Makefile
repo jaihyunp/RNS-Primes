@@ -10,19 +10,15 @@ DIR_BINS=bin
 
 OBJS = \
 $(DIR_OBJS)/prime.o \
-$(DIR_OBJS)/arch32.o \
-$(DIR_OBJS)/arch64.o \
 
 
 DEPS = \
 $(DIR_OBJS)/prime.d \
-$(DIR_OBJS)/arch32.d \
-$(DIR_OBJS)/arch64.d \
+
 
 SRCS = \
 $(DIR_SRCS)/prime.cpp \
-$(DIR_SRCS)/arch32.cpp \
-$(DIR_SRCS)/arch64.cpp \
+
 
 TARGET_PRIME = $(DIR_BINS)/prime.exe
 
@@ -42,7 +38,7 @@ all: prime
 prime: $(OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC Archiver'
-	$(CC) $(DIR_SRCS)/main/main-prime.cpp $(OBJS) $(CFLAGS) -o $(TARGET_PRIME)
+	$(CC) $(DIR_SRCS)/main/main.cpp $(OBJS) $(CFLAGS) -o $(TARGET_PRIME)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

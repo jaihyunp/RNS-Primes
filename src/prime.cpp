@@ -2,6 +2,61 @@
 #include "arch32.h"
 #include "arch64.h"
 #include <iostream>
+#include <cassert>
+
+uint32 mulmod(uint32 a, uint32 b, uint32 p)
+{
+    assert(!(p >> 31) && "p has more than 31 bits");
+    uint32 x = 0, y = a % p;
+    uint32 _b = b;
+    while (_b > 0) {
+        if (_b & 0x1)
+            x = (x + y) % p;
+        y = (y << 1) % p;
+        _b >>= 1;
+    }
+    return x;
+};
+
+uint32 expmod(uint32 base, uint32 exp, uint32 p)
+{
+    assert(!(p >> 31) && "p has more than 31 bits");
+    uint32 x = 1, y = base, _exp = exp;
+    while (_exp) {
+        if (_exp & 0x1)
+            x = mulmod(x, y, p);
+        y = mulmod(y, y, p);
+        _exp >>= 1;
+    }
+    return x;
+};
+
+uint64 mulmod(uint64 a, uint64 b, uint64 p)
+{
+    assert(!(p >> 63) && "p has more than 63 bits");
+    uint64 x = 0, y = a % p;
+    uint64 _b = b;
+    while (_b > 0) {
+        if (_b & 0x1)
+            x = (x + y) % p;
+        y = (y << 1) % p;
+        _b >>= 1;
+    }
+    return x;
+};
+
+uint64 expmod(uint64 base, uint64 exp, uint64 p)
+{
+    assert(!(p >> 63) && "p has more than 63 bits");
+    uint64 x = 1, y = base, _exp = exp;
+    while (_exp) {
+        if (_exp & 0x1)
+            x = mulmod(x, y, p);
+        y = mulmod(y, y, p);
+        _exp >>= 1;
+    }
+    return x;
+};
 
 //bool _is_prime(uint32 prime)
 //{
@@ -81,30 +136,4 @@ bool is_prime(uint64 prime)
             return false;
     }
     return true;
-}
-
-
-
-int get_num_RNS_primes(int bitlen, int logN, int hwt = -1)
-{
-    int _hwt = (hwt > 0) ? hwt : bitlen;
-    return 0;
-}
-
-uint32 get_RNS_prime30(int bitlen, int logN, int hwt);
-uint64 get_RNS_prime60(int bitlen, int logN, int hwt);
-int print_all_RNS_primes(int bitlen, int logN)
-{
-    int num = 0;
-    // which means 2N | p-1
-    if (bitlen < logN + 1)
-        return num;
-
-    for (uint64 prime = ((uint64) 1 << bitlen) + 1; !(prime >> (bitlen + 1)); prime += (uint64) 1 << (logN + 1)) {
-        if (is_prime(prime)) {
-            std::cout << prime << std::endl; 
-            num ++ ;
-        }
-    }
-    return num;
 }

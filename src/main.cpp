@@ -1,3 +1,4 @@
+/* author: jhyunp@snu.ac.kr */
 #include <iostream>
 #include "prime.h"
 #include <cstdio>

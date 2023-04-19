@@ -1,3 +1,4 @@
+/* author: jhyunp@snu.ac.kr */
 #include "prime.h"
 #include "arch32.h"
 #include "arch64.h"

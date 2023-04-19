@@ -1,2 +1,2 @@
-# ckks-hardware-architecture
-ckks implementation regarding fixed hardware architectures
+# RNS Primes
+Finding RNS primes

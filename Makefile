@@ -38,7 +38,7 @@ all: prime
 prime: $(OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC Archiver'
-	$(CC) $(DIR_SRCS)/main/main.cpp $(OBJS) $(CFLAGS) -o $(TARGET_PRIME)
+	$(CC) $(DIR_SRCS)/main.cpp $(OBJS) $(CFLAGS) -o $(TARGET_PRIME)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
